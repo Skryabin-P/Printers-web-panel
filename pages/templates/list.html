@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+<html>
+<head></head>
+    {% if ls %} {%block title%}
+        List num {{ls.id}}   {%endblock%} {% endif %}
+
+<div id="content" name="content">
+    {% if ls %}
+    {% block content %}
+    <h1>{{ls.name}}</h1>
+    {% endblock %}
+    {% endif %}
+</div>

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %} Cartridge {% endblock %}
+{% block content %}
+{% load my_extras %}
+<form method="GET" > <div class="form-row">
+
+        {% for field in filter.form %}
+        {% if forloop.counter == 4 %}
+        <br><br>
+        {% endif %}
+            <tr>
+                <td>{{field.label}}  {{field}} </td>
+                </tr>
+        {% endfor %}
+
+    </div><br>
+    <input class="btn btn-primary" type="submit" value="Показать">
+</form><br>
+<table class="table table-striped table-dark">
+  <thead class="thead-light">
+    <tr>
+        {% for field in fields %}
+      <th scope="col">{{field}}</th>
+        {% endfor %}
+        <th scope="col"></th><th scope="col"></th>
+    </tr>
+      </thead>
+
+<tbody>
+{% for param in page_obj %}
+    <tr>
+
+<!--      <th scope="row">1</th>-->
+
+        {% for value in param.get_string_fields %}
+      <td>{{value}}</td>
+        {% endfor %} {% if user.is_authenticated %}<td><a class="btn btn-outline-success" href="/drum_stats/update/{{param.id}}">Update</a></td> <td><a class="btn btn-outline-danger" href="/drum_stats/delete/{{param.id}}">Delete</a></td>{% endif %}
+
+    </tr>
+
+{% endfor %}
+
+
+
+
+    <tr class="table-info"><td></td><td></td><td>Found by request</td> <td class="table-warning">{{filter.qs.count}}</td><td></td><td><td></td><td></td><td><td></td></tr>
+</tbody>
+</table>
+{% if page_obj.paginator.num_pages > 1 %}
+        <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item"><a class = "page-link" href="{% my_url 1 'page' request.GET.urlencode %}"> First</a></li>
+        {% for i in page_obj.paginator.page_range %}
+        {% if i > 1 and i < page_obj.paginator.num_pages%}
+            <li class="page-item"><a class = "page-link" href="{% my_url i 'page' request.GET.urlencode %}"> {{i}}</a></li>
+        {% endif %}
+        {% endfor %}
+
+
+            <li class="page-item"><a class = "page-link" href ="{% my_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">Last </a></li>
+        </ul>
+
+
+        </nav>
+    {% endif %}
+{% endblock %}

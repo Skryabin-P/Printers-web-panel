@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} Cartridge {% endblock %}
+{% block content %}
+{% load my_extras %}
+<form method="GET" > <div class="form-row">
+
+        {% for field in filter.form %}
+        {% if forloop.counter == 4 %}
+        <br><br>
+        {% endif %}
+            <tr>
+                <td>{{field.label}}  {{field}} </td>
+                </tr>
+        {% endfor %}
+
+    </div><br>
+    <input class="btn btn-primary" type="submit" value="Показать"> {% if user.is_authenticated %}
+<a class="btn btn-outline-success" href="{% my_url 1 'export' request.GET.urlencode%}">Export to Excel</a> {% endif %}
+</form> <br>
+<table class="table table-bordered">
+
+
+<tbody>
+
+    {% for i in range %}
+
+    <tr class="table-primary">
+        {% for field in ru_fields1 %}
+      <th>{{field}}</th>
+        {% endfor %}
+    </tr>
+
+    <tr class="table-active">
+        {% for value in  info_table|index:i|values %}
+        <td>{{value}}</td>
+        {% endfor %}
+    </tr>
+
+    <tr class="table-success">
+        {% for field in ru_fields2 %}
+      <th scope="col">{{field}}</th>
+        {% endfor %}<th></th><th></th><th></th>
+    </tr>
+
+    {% for row in page_obj|index:i %}
+<tr>
+        {% for item in row.values %}
+        <td>{{item}}</td>
+        {% endfor %}<td></td>
+
+        </tr>
+        {% endfor %}
+    <tr class="bg-danger"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+
+
+
+
+    {% endfor %}
+
+
+
+</tbody>
+
+<div class="col-6">
+    <tr class="table-info"><td></td><td></td><td>Found by request</td> <td class="table-warning">{{stats_table|length}}<td></td><td></td></tr></div>
+</table>
+{% if page_obj.paginator.num_pages > 1 %}
+        <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item"><a class = "page-link" href="{% my_url 1 'page' request.GET.urlencode %}"> First</a></li>
+        {% for i in page_obj.paginator.page_range %}
+        {% if i > 1 and i < page_obj.paginator.num_pages%}
+            <li class="page-item"><a class = "page-link" href="{% my_url i 'page' request.GET.urlencode %}"> {{i}}</a></li>
+        {% endif %}
+        {% endfor %}
+
+
+            <li class="page-item"><a class = "page-link" href ="{% my_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">Last </a></li>
+        </ul>
+
+
+        </nav>
+    {% endif %}
+
+
+
+{% endblock %}

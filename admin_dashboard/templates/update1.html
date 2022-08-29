@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+Update
+{% endblock %}
+
+{% block content %}
+<a class="btn btn-primary btn-lg" href="/admin_dashboard/printermodel/">Edit printer models list</a>
+<a class="btn btn-primary btn-lg" href="/admin_dashboard/toner/">Edit toner list</a>
+<a class="btn btn-primary btn-lg" href="/admin_dashboard/places/">Edit places list</a>
+<a class="btn btn-primary btn-lg" href="/admin_dashboard/printers/">Edit printers </a><br><br>
+<h3>Update  </h3>
+<br>
+<div class="form-group">
+
+    <form method="POST" action=""> {% csrf_token %}{{form|crispy}}
+        <strong>Are you sure you want to update ?</strong><br>
+        <table class="table table-striped table-dark">
+  <thead class="thead-light">
+    <tr>
+        {% for field in fields %}
+      <th scope="col">{{field}}</th>
+        {% endfor %}
+        <th scope="col"></th>
+    </tr>
+      </thead>
+
+<tbody>
+    <tr>
+
+        {% for value in params.get_string_fields %}
+      <td>{{value}}</td>
+         {% endfor %}
+
+    </tr>
+
+
+</tbody>
+</table>
+    <button class="btn btn-success">Update</button>
+        <a href = "/admin_dashboard/{{type}}" class="btn btn-danger">No</a>
+    </form>
+</div>
+
+{%endblock content %}

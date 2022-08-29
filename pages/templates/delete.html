@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+Delete
+{% endblock %}
+
+{% block content %}
+
+<h3>Delete</h3>
+<table class="table table-striped table-dark">
+  <thead class="thead-light">
+    <tr>
+        {% for field in fields %}
+      <th scope="col">{{field}}</th>
+        {% endfor %}
+      </thead>
+
+<tbody>
+    <tr>
+
+        {% for value in params.get_string_fields %}
+      <td>{{value}}</td>
+         {% endfor %}
+
+    </tr>
+
+
+</tbody>
+</table>
+<br>
+<div class="form-group">
+
+    <strong>Are you sure?</strong><br>
+    <form method="POST" action=""> {% csrf_token %}
+    <button class="btn btn-danger">Delete</button>
+        <a href = "/cartridge_stats" class="btn btn-success">No</a>
+    </form>
+</div>
+
+{%endblock content %}

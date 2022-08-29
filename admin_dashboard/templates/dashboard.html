@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<a class="btn btn-primary btn-lg" href="/admin_dashboard/printermodel/">Edit printer models list</a>
+<a class="btn btn-primary btn-lg" href="/admin_dashboard/toner/">Edit toner list</a>
+<a class="btn btn-primary btn-lg" href="/admin_dashboard/places/">Edit places list</a>
+<a class="btn btn-primary btn-lg" href="/admin_dashboard/printers/">Edit printers </a>
+<a class="btn btn-primary btn-lg" href="/admin_dashboard/department/">Edit Departments </a>
+<a class="btn btn-primary btn-lg" href="/admin_dashboard/drum/">Edit Drum list </a>
+<br>
+{% if type %}
+
+
+
+
+
+<br>
+<div class = "row justify-content-right">
+<div class="col-20">
+
+    <a class="btn btn-outline-info" href="/admin_dashboard/{{type}}/add">Add new {{type}}</a><br><br>
+</div></div>
+<table class="table table-striped table-dark">
+  <thead class="thead-light">
+    <tr>
+        {% for field in fields %}
+      <th scope="col">{{field}}</th>
+        {% endfor %}
+        <th scope="col"></th>
+    </tr>
+      </thead>
+
+{% if params %}
+<tbody>
+{% for param in params %}
+    <tr>
+
+<!--      <th scope="row">1</th>-->
+
+        {% for value in param.get_string_fields %}
+      <td>{{value}}</td>
+         {% endfor %} <td><a class="btn btn-outline-success" href="/admin_dashboard/{{type}}/update/{{param.id}}">Update</a> <a class="btn btn-outline-danger" href="/admin_dashboard/{{type}}/delete/{{param.id}}">Delete</a></td>
+
+    </tr>
+
+{% endfor %}
+</tbody>
+
+</table>
+<div class="row">
+<div class="col-12">
+    {% if not action %}
+        {% if page_obj.paginator.num_pages > 1 %}
+        <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item"><a class = "page-link" href="?page=1"> First</a></li>
+        {% for i in page_obj.paginator.page_range %}
+        {% if i > 1 and i < page_obj.paginator.num_pages%}
+            <li class="page-item"><a class = "page-link" href="?page={{i}}"> {{i}}</a></li>
+        {% endif %}
+        {% endfor %}
+
+
+            <li class="page-item"><a class = "page-link" href ="?page={{page_obj.paginator.num_pages}}">Last </a></li>
+        </ul>
+
+
+        </nav>
+    {% endif %}
+    {% endif %}
+{% else %}
+    <h4>There's nothing yet</h4>
+ {% endif %}
+
+
+
+
+
+</div>
+</div>
+
+
+
+{% endif %}
+
+{% if action %}
+<form method="post" class="form-group" >
+    {{form|crispy}}
+    {% csrf_token %}
+    <br>
+    <button type="submit" class="btn btn-success" >Add new one</button>
+    </form>
+
+
+{% endif %}
+
+{% endblock %}
+
+

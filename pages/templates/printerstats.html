@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Printers {% endblock %}
+{% block content %}
+
+{% if header %}
+<table class="table table-sm table-dark">
+  <thead>
+    <tr>
+<th scope="col">#</th>
+{% for col in header %}
+      <th scope="col">{{col}}</th>
+
+{% endfor %}
+
+        </tr>
+  </thead>
+    <tbody>
+
+{% for printer in printers %}<tr >
+        <td class="table-primary"> {{ forloop.counter }}
+</td>
+{% for item in printer.values %}
+
+    {% if item == 'Online' %}
+    <td class="bg-success">
+        {% elif item == 'Offline' %}
+        <td class="bg-danger">
+    {% else %}
+    <td class="table-primary">
+    {% endif %}
+
+ {{item}}
+</td> {% endfor %}
+
+</tr>
+{% endfor %}
+
+
+    </tbody></table>
+
+{% else %}
+
+<div class="alert alert-danger" role="alert">
+  {{ error }}
+</div>
+
+
+{% endif %}
+
+{% endblock %}

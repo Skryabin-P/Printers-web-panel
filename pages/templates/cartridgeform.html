@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %} Give cartridge {% endblock %}
+{% block content %}
+<form method="post" class="form-group" >
+    {{form|crispy}}
+    {% csrf_token %}
+    <br>
+    <button type="submit" class="btn btn-success" >Add new one</button>
+    </form>
+
+
+{% endblock %}

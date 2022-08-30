@@ -141,36 +141,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 import mimetypes
 mimetypes.add_type("application/javascript", ".js", True)
-# mimetypes
-# mimetypes.add_type("application/javascript", ".js", True)
 
-# if DEBUG:
-#     import mimetypes
-#
-#     mimetypes.add_type("application/javascript", ".js", True)
-#     # MIDDLEWARE += [
-#     #     'debug_toolbar.middleware.DebugToolbarMiddleware',
-#     # ]
-#     INSTALLED_APPS += [
-#         'debug_toolbar',
-#     ]
-#     INTERNAL_IPS = ['127.0.0.1', ]
-#
-#     # this is the main reason for not showing up the toolbar
-#     DEBUG_TOOLBAR_PATCH_SETTINGS = False
-#
-#
-#     def show_toolbar(request):
-#         return True
-#
-#     import os
-#     STATICFILES_DIR = [
-#         os.path.join(BASE_DIR, 'static'),
-#
-#     ]
-#     DEBUG_TOOLBAR_CONFIG = {
-#         'INTERCEPT_REDIRECTS': False,
-#         "SHOW_TOOLBAR_CALLBACK": show_toolbar,
-#         'INSERT_BEFORE': '</head>',
-#         'RENDER_PANELS': True,
-#     }

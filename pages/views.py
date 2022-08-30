@@ -84,7 +84,7 @@ def cartridge_stats(response):
     # stats of how many cartridges(toners) was gived to departments
     fields = [f.verbose_name for f in GiveCartridge._meta.fields]
 
-    filter = CartridgeFilter(response.GET, queryset=GiveCartridge.objects.all().order_by('-date'))
+    filter = CartridgeFilter(response.GET, queryset=GiveCartridge.objects.all().order_by('-date','-pk'))
     context = {}
     context['filter'] = filter
     context['q'] = filter.qs.values("date", "printermodel__name","toner__name",
@@ -117,7 +117,7 @@ def drum_stats(response):
     # similarly with cartridge_stats
     fields = [f.verbose_name for f in GiveDrum._meta.fields]
 
-    filter = DrumFilter(response.GET, queryset=GiveDrum.objects.all().order_by('-date'))
+    filter = DrumFilter(response.GET, queryset=GiveDrum.objects.all().order_by('-date','-pk'))
     context = {}
     context['filter'] = filter
 

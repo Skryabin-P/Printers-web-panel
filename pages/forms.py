@@ -6,10 +6,6 @@ from admin_dashboard.models import DB_DCT
 import django_filters
 class GiveCartridgeForm(forms.ModelForm):
 
-    # def __init__(self, *args, **kwargs):
-    #     super(GiveCartridgeForm, self).__init__(*args, **kwargs)
-    #     self.fields['issued_by'].disabled = True
-
     printermodel = forms.ModelChoiceField(queryset=DB_DCT['printermodel'].objects.all(),
                                           label='Модель принтера',
                                           widget=forms.Select(attrs={'class': 'selectpicker','data-live-search':'true',
@@ -82,13 +78,7 @@ class GiveDrumForm(forms.ModelForm):
         fields = '__all__'
 
 
-class ChooseCategoryForm(forms.Form):
-    printermodel = forms.ModelChoiceField(queryset=DB_DCT['printermodel'].objects.all(), required=False)
-    toner = forms.ModelChoiceField(queryset=DB_DCT['toner'].objects.all(), required=False)
-    place = forms.ModelChoiceField(queryset=DB_DCT['places'].objects.all(), required=False)
-    department = forms.ModelChoiceField(queryset=DB_DCT['department'].objects.all(), required=False)
-    date__gte = forms.DateField(required=False, widget=forms.DateInput(attrs={'type':'date'}))
-    date__lte = forms.DateField(required=False,widget=forms.DateInput(attrs={'type': 'date'}))
+
 
 
 class CartridgeFilter(django_filters.FilterSet):
@@ -124,7 +114,7 @@ class CartridgeFilter(django_filters.FilterSet):
                                                  empty_label='Выберете выдавшего')
     class Meta:
         model = GiveCartridge
-        # fields = '__all__'
+
         exclude = ('amount','comment')
 
 class DrumFilter(django_filters.FilterSet):
@@ -166,7 +156,7 @@ class DrumFilter(django_filters.FilterSet):
                                                  empty_label='Выберете выдавшего')
     class Meta:
         model = GiveDrum
-        # fields = '__all__'
+
         exclude = ('comment',)
 
 class RequestFilter(django_filters.FilterSet):
@@ -192,8 +182,7 @@ class RequestFilter(django_filters.FilterSet):
                                                         'data-size': '4', 'data-dropup-auto': 'false',
                                                         'data-style': 'btn btn-outline-primary'}),
                                              empty_label='Выберете площадку')
-    # place = django_filters.ModelChoiceFilter(queryset=DB_DCT['places'].objects.all(), required=False)
-    # toner_model = django_filters.ModelChoiceFilter(queryset=DB_DCT['toner'].objects.all(), required=False)
+
 
 
     class Meta:
@@ -201,8 +190,7 @@ class RequestFilter(django_filters.FilterSet):
         model = RequestPrinters
         # fields = '__all__'
         fields = ('date','printer__printermodel','printer__place','printer__toner',)
-        # exclude = ('changed','toner_left','ip','device_name','page_utility')
-        # ,'toner_model',
+
 
 class TonerUtilsFilter(django_filters.FilterSet):
     date = django_filters.DateFromToRangeFilter(widget=django_filters.widgets.RangeWidget(

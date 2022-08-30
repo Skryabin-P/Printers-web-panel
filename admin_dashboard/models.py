@@ -31,7 +31,6 @@ class DepartmentList(models.Model):
     def __str__(self):
         return self.name
 
-DB_DCT_1 = {'printermodel': PrinterModelList, 'toner':TonerModelList,'places':PlacesList}
 class PrintersMain(models.Model):
     ip = models.GenericIPAddressField(max_length=50, protocol='IPv4', unique=True, verbose_name='IP')
     printermodel = models.ForeignKey(PrinterModelList, on_delete=models.CASCADE, blank=True, null=True,
@@ -55,6 +54,3 @@ class DrumList(models.Model):
 
 DB_DCT = {'printermodel': PrinterModelList, 'toner':TonerModelList,'places':PlacesList,'printers':PrintersMain,'department':DepartmentList,'drum':DrumList}
 
-# printermodel = models.ForeignKey(PrinterModelList, on_delete=models.CASCADE, blank=True, null=True)
-#     toner = models.ForeignKey(TonerModelList, on_delete=models.CASCADE, blank=True, null=True)
-#     place = models.ForeignKey(PlacesList, on_delete=models.CASCADE, blank=True, null=True)

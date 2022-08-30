@@ -5,11 +5,14 @@ def get_full_info(ip: str):
            '.1.3.6.1.2.1.1.5.0']
     keys = ['model', 'uptime', 'pages', 'black_toner_left', 'black_toner_model', 'Device name']
     new_dict = {}
+    # if printer doesn't response set all fields as None
     try:
         raw_data = get(ip, oids, hlapi.CommunityData('public',mpModel=0))
         old_keys = list(raw_data.keys())
         for i in range(len(keys)):
+            # because it works on windows server i had to change encoding
             new_dict[keys[i]] = str(raw_data[old_keys[i]]).encode('iso-8859-1','ignore').decode('utf-8','ignore')
+
         return new_dict
     except:
         for key in keys:
@@ -21,6 +24,9 @@ def get_full_info(ip: str):
 
 
 if __name__ == "__main__":
+    # commented code. I just looked for printers in our network subnets and save it to excel
+    # so I  can easy add them in admin dashboard
+
     import xlwt
     ip_list = ['10.13.10.22']
     for ip in ip_list:
@@ -75,7 +81,7 @@ if __name__ == "__main__":
     #     for col in range(len(keys)):
     #         ws.write(row_num, col, row[keys[col]])
     # wb.save('printers.xls')
-    print(f'Время исполнения: {time.time() - start} секунды')
+    # print(f'Время исполнения: {time.time() - start} секунды')
 
 
 

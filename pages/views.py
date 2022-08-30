@@ -47,6 +47,7 @@ class Main(ListView):
     model = PlacesList
     context_object_name = 'places'
 
+# check status and info about printers in live mode
 def printerstats(response, place):
     where = PlacesList.objects.get(name=place)
     printers = PrintersMain.objects.filter(place=where).all()
@@ -80,6 +81,7 @@ def printerstats(response, place):
 
 
 def cartridge_stats(response):
+    # stats of how many cartridges(toners) was gived to departments
     fields = [f.verbose_name for f in GiveCartridge._meta.fields]
 
     filter = CartridgeFilter(response.GET, queryset=GiveCartridge.objects.all().order_by('-date'))
@@ -90,7 +92,7 @@ def cartridge_stats(response):
     eng_fields = ["date", "printermodel__name","toner__name",
                                     "place__name","department__name","amount","comment","issued_by__username"]
 
-    context['fields'] = fields
+    context['fields'] = fields  # fields name in russian
     context['eng_fields'] = eng_fields
     paginated_set = Paginator(filter.qs, 20)
     page_number = response.GET.get('page')
@@ -98,6 +100,8 @@ def cartridge_stats(response):
     context['page_obj'] = page_obj
     date_min = response.GET.get('date_min')
     date_max = response.GET.get('date_max')
+
+    # dates for export in excel
     if date_min == None or date_min == '':
         date_min = '---'
     if date_max == None or date_max == '':
@@ -110,6 +114,7 @@ def cartridge_stats(response):
 
 
 def drum_stats(response):
+    # similarly with cartridge_stats
     fields = [f.verbose_name for f in GiveDrum._meta.fields]
 
     filter = DrumFilter(response.GET, queryset=GiveDrum.objects.all().order_by('-date'))
@@ -127,6 +132,7 @@ def drum_stats(response):
 
 
 def request_printers_stats(response):
+    # test view func to see all records in table RequestPrinters
     if not response.user.is_authenticated:
         return redirect(f"/admin_dashboard/login")
     fields = [f.name for f in RequestPrinters._meta.fields]
@@ -143,10 +149,10 @@ def request_printers_stats(response):
 
 @query_debugger
 def view_full_report(response):
-
+    # to see all stats for each printer
     filter = RequestFilter(response.GET, queryset=RequestPrinters.objects.order_by())
     context = {}
-
+    # annotate filtered queryset for each printer
     q = filter.qs.values("printer").annotate(ip = F('printer__ip'),
                                                         printer_model = F('printer__printermodel__name'), toner_model = F('printer__toner__name'),
                                                         place = F('printer__place__name'),
@@ -170,6 +176,7 @@ def view_full_report(response):
     page_number = response.GET.get('page')
     date_min = response.GET.get('date_min')
     date_max = response.GET.get('date_max')
+    # dates for execl export
     if date_min == None or date_min =='':
         date_min = '---'
     if date_max == None or date_max =='':
@@ -183,7 +190,7 @@ def view_full_report(response):
 def give_cartridge(response):
     if not response.user.is_authenticated:
         return redirect(f"/admin_dashboard/login")
-
+    # view where you give toner , select printer model, toner model etc
     class CreateMyView(CreateView):
         model = GiveCartridge
         template_name = 'cartridgeform.html'
@@ -191,7 +198,7 @@ def give_cartridge(response):
         success_url = f"/cartridge_stats"
 
         def get_initial(self):
-
+            # set initial for field "issued_by" as logged user's ID
             self.initial.update({
                 'issued_by': self.request.user.id,
 
@@ -201,6 +208,7 @@ def give_cartridge(response):
     return CreateMyView.as_view()(response)
 
 def give_drum(response):
+    # similarly with give_cartridge
     if not response.user.is_authenticated:
         return redirect(f"/admin_dashboard/login")
 
@@ -225,6 +233,7 @@ def give_drum(response):
 
 
 def delete_data(response,pk):
+    # delete record from GiveCartridge
     if not response.user.is_authenticated:
         return redirect(f"/cartridge_stats")
 
@@ -248,6 +257,7 @@ def delete_data(response,pk):
 
 
 def update_data(response, pk):
+    # update record from GiveCartridge
     if not response.user.is_authenticated:
         return redirect(f"/admin_dashboard/login")
     fields = [f.verbose_name for f in GiveCartridge._meta.fields]
@@ -275,6 +285,7 @@ def update_data(response, pk):
     return UpdateParams.as_view()(response)
 
 def delete_drum(response,pk):
+    # delete record from GiveDrum
     if not response.user.is_authenticated:
         return redirect(f"/drum_stats")
 
@@ -298,6 +309,7 @@ def delete_drum(response,pk):
 
 
 def update_drum(response, pk):
+    # update record from GiveDrum
     if not response.user.is_authenticated:
         return redirect(f"/admin_dashboard/login")
     fields = [f.verbose_name for f in GiveDrum._meta.fields]
@@ -345,7 +357,7 @@ def export_excel(request, obj,date_min = False,date_max=False):
                                ", color red; align: horiz center;")
     main_style = xlwt.XFStyle()
     obj = obj.order_by('place')
-    places = set(dic['place'] for dic in obj)
+    places = set(dic['place'] for dic in obj) # unique places
     places = list(places)
     places.sort()
 
@@ -357,7 +369,7 @@ def export_excel(request, obj,date_min = False,date_max=False):
             ws.col(col).width = 256 * 32
         ws.write(row_num,col,ru_fields[col],column_style)
 
-
+    # write in cell starts and end dates of the report
     ws.write(row_num,len(fields)+1,"Начало периода",column_style)
     ws.write(row_num, len(fields) + 2, "Конец периода", column_style)
     if date_min:
@@ -384,10 +396,8 @@ def export_excel(request, obj,date_min = False,date_max=False):
 
 @query_debugger
 def cartridge_utility(response):
-    # if not response.user.is_authenticated:
-    #     return redirect(f"/admin_dashboard/login")
-    # fields = [f.verbose_name for f in RequestPrinters._meta.fields]
 
+    # Report with toner utility, when toner was changed , how many pages was printed,etc
     filter = TonerUtilsFilter(response.GET, queryset=RequestPrinters.objects.prefetch_related("printer").order_by())
     context = {}
     context['filter'] = filter
@@ -475,6 +485,7 @@ def export_toner(request, context,date_min = False,date_max=False):
     header_style = xlwt.easyxf("pattern: pattern solid, fore_color yellow; font: height 600, name Times New Roman"
                                ", color red; align: horiz center;")
     main_style = xlwt.XFStyle()
+    # write in cell starts and end dates of the report
     ws.write(row_num, len(fields1) + 1, "Начало периода", column_style)
     ws.write(row_num, len(fields1) + 2, "Конец периода", column_style)
     if date_min:
@@ -484,7 +495,7 @@ def export_toner(request, context,date_min = False,date_max=False):
         ws.write(1, len(fields1) + 2, date_max, column_style)
         ws.col(len(fields1) + 2).width = 256 * 17
 
-    places = set(dic['printer__place__name'] for dic in info_table)
+    places = set(dic['printer__place__name'] for dic in info_table) # unique places
     places = list(places)
     places.sort()
     print(places)
@@ -542,7 +553,7 @@ def export_toner_withdraw(request,obj,date_min = False,date_max=False):
                                ", color red; align: horiz center;")
     main_style = xlwt.XFStyle()
 
-    places = set(dic['place__name'] for dic in obj['q'])
+    places = set(dic['place__name'] for dic in obj['q'])  # unique places
     places = list(places)
     places.sort()
     print(places)
@@ -559,9 +570,10 @@ def export_toner_withdraw(request,obj,date_min = False,date_max=False):
         else:
             ws.col(col).width = 256 * 32
         ws.write(row_num,col,fields[col],column_style)
-
+    # write in cell starts and end dates of the report
     ws.write(row_num, len(fields) + 1, "Начало периода", column_style)
     ws.write(row_num, len(fields) + 2, "Конец периода", column_style)
+
     if date_min:
         ws.write(1, len(fields) + 1, date_min, column_style)
         ws.col(len(fields) + 1).width = 256 * 17
@@ -582,38 +594,3 @@ def export_toner_withdraw(request,obj,date_min = False,date_max=False):
     wb.save(return_obj)
 
     return return_obj
-
-# 'form': form
-
-
-
-
-    # class CartridgeView(ListView):
-    #     ordering = ['-date']
-    #     model = GiveCartridge
-    #     paginate_by = 2
-    #     context_object_name = 'params'
-    #     extra_context={'fields': fields,'filter':filter}
-    #     template_name = 'cartridgestats.html'
-    #     # def get_queryset(self):
-    #     #     my_filter = Q()
-    #     #     kwargs = dict(response.GET)
-    #     #     if len(kwargs) > 0:
-    #     #         kwargs.pop('page')
-    #     #     for key in list(kwargs):
-    #     #
-    #     #         print(key)
-    #     #         if len(kwargs[key][0]) == 0:
-    #     #             kwargs.pop(key)
-    #     #         else:
-    #     #             kwargs[key] = kwargs[key][0]
-    #     #
-    #     #     for item in kwargs:
-    #     #         my_filter &= Q(**{item: kwargs[item]})
-    #     #
-    #     #     queryset = GiveCartridge.objects.filter(my_filter).order_by('-date')
-    #     #
-    #     #     return queryset
-    #
-    #
-    # return CartridgeView.as_view()(response)

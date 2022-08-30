@@ -10,6 +10,7 @@ app = Celery('interface')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
+# get info from printers every 30 min in working hours
 app.conf.beat_schedule = {
     'request_printers_by_schedule': {
         'task': 'pages.tasks.request_printers',

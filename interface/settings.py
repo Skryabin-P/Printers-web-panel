@@ -24,7 +24,7 @@ CELERY_BROKER_URL = 'amqp://localhost'
 SECRET_KEY = 'django-insecure-mxx*#b*x47qvfulv@kr8r-1225run8u+bzm3!oq*qpz)p6@c4m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost','10.7.202.98','127.0.0.1']
 

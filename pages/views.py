@@ -57,12 +57,15 @@ def printerstats(response, place):
     dict2 = {}
     if len(printers) > 0:
         for item in printers:
+            model = item.printermodel.name
             item = model_to_dict(item)
+
+
             temp_dict = {}
             for h in header1:
                 dict2[h] = dict(item)[h]
             temp_dict.update(dict2)
-            req_printer = get_full_info(item['ip'])
+            req_printer = get_full_info(item['ip'],model)
             temp_dict.update(req_printer)
             if temp_dict['pages'] != None:
                 temp_dict['status'] = 'Online'

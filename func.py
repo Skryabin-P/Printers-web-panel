@@ -8,7 +8,7 @@ def get_full_info(ip: str,model: str):
     new_dict = {}
     # if printer doesn't response set all fields as None
     try:
-        raw_data = get(ip, oids, hlapi.CommunityData('public',mpModel=1))
+        raw_data = get(ip, oids, hlapi.CommunityData('public',mpModel=0))
         old_keys = list(raw_data.keys())
         for i in range(len(keys)):
             # because it works on windows server i had to change encoding

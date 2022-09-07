@@ -1,17 +1,14 @@
 from quicksnmp import *
 import time
 def get_full_info(ip: str,model: str):
-    if 'epson' in model.lower():
-        oids = ['.1.3.6.1.2.1.25.3.2.1.3.1','.1.3.6.1.2.1.1.3.0','.1.3.6.1.2.1.43.10.2.1.4.1.1',
-                '.1.3.6.1.2.1.43.11.1.1.9.1.4','.1.3.6.1.2.1.43.11.1.1.6.1.4',]
-    else:
-        oids = ['.1.3.6.1.2.1.25.3.2.1.3.1','.1.3.6.1.2.1.1.3.0','.1.3.6.1.2.1.43.10.2.1.4.1.1','.1.3.6.1.2.1.43.11.1.1.9.1.1','.1.3.6.1.2.1.43.11.1.1.6.1.1',
+
+    oids = ['.1.3.6.1.2.1.25.3.2.1.3.1','.1.3.6.1.2.1.1.3.0','.1.3.6.1.2.1.43.10.2.1.4.1.1','.1.3.6.1.2.1.43.11.1.1.9.1.1','.1.3.6.1.2.1.43.11.1.1.6.1.1',
                '.1.3.6.1.2.1.1.5.0']
     keys = ['model', 'uptime', 'pages', 'black_toner_left', 'black_toner_model', 'Device name']
     new_dict = {}
     # if printer doesn't response set all fields as None
     try:
-        raw_data = get(ip, oids, hlapi.CommunityData('public',mpModel=0))
+        raw_data = get(ip, oids, hlapi.CommunityData('public',mpModel=1))
         old_keys = list(raw_data.keys())
         for i in range(len(keys)):
             # because it works on windows server i had to change encoding

@@ -49,7 +49,7 @@ class AddNewPrinter(forms.ModelForm):
                                                                         'data-live-search': 'true',
                                                                         'data-size': '4', 'data-dropup-auto': 'false',
                                                                         'data-style': 'btn btn-outline-primary'}),
-                                                             empty_label='Выберете модель принтера')
+                                                             empty_label='Выберете площадку')
 
     class Meta:
 

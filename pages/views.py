@@ -401,7 +401,7 @@ def export_excel(request, obj,date_min = False,date_max=False):
 def cartridge_utility(response):
 
     # Report with toner utility, when toner was changed , how many pages was printed,etc
-    filter = TonerUtilsFilter(response.GET, queryset=RequestPrinters.objects.prefetch_related("printer").order_by('-pk'))
+    filter = TonerUtilsFilter(response.GET, queryset=RequestPrinters.objects.prefetch_related("printer").order_by())
     context = {}
     context['filter'] = filter
     context['fields'] = ["printer__ip","device_name","printer__comment","printer__printermodel","printer__toner","printer__place"]

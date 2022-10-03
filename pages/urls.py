@@ -16,4 +16,5 @@ urlpatterns = [
     path('drum_stats/update/<int:pk>', views.update_drum, name = 'drum_update'),
     path('view_full_report', views.view_full_report, name='view_full_report'),
     path('cartridge_utility', views.cartridge_utility, name='cartridge_utility'),
+    path('request_printers',views.request_printers_stats,name='request_printers')
 ]

@@ -10,7 +10,7 @@ from admin_dashboard.models import PlacesList, PrintersMain
 from django.views.generic.list import ListView
 from func import get_full_info
 from django.forms.models import model_to_dict
-from .forms import GiveCartridgeForm,TonerUtilsFilter,CartridgeFilter,RequestFilter,GiveDrumForm,DrumFilter
+from .forms import GiveCartridgeForm,TonerUtilsFilter,CartridgeFilter,RequestFilter,GiveDrumForm,DrumFilter,RequestFilterTest
 from django.urls import reverse
 from django.core.paginator import Paginator
 import xlwt
@@ -140,7 +140,7 @@ def request_printers_stats(response):
         return redirect(f"/admin_dashboard/login")
     fields = [f.name for f in RequestPrinters._meta.fields]
     # form = ChooseCategoryForm
-    filter = CartridgeFilter(response.GET, queryset=RequestPrinters.objects.all().order_by('-date'))
+    filter = RequestFilterTest(response.GET, queryset=RequestPrinters.objects.all().order_by('-date'))
     context = {}
     context['filter'] = filter
     context['fields'] = fields
@@ -148,7 +148,7 @@ def request_printers_stats(response):
     page_number = response.GET.get('page')
     page_obj = paginated_set.get_page(page_number)
     context['page_obj'] = page_obj
-    return render(response,'cartridgestats.html',context=context)
+    return render(response,'cartridge_withdraw.html',context=context)
 
 @query_debugger
 def view_full_report(response):

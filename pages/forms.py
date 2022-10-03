@@ -117,6 +117,24 @@ class CartridgeFilter(django_filters.FilterSet):
 
         exclude = ('amount','comment')
 
+
+class RequestFilterTest(django_filters.FilterSet):
+    date = django_filters.DateFromToRangeFilter(widget=django_filters.widgets.RangeWidget(
+            attrs={'type':'date','class':'btn btn-outline-primary'}
+        ),label='Период')
+    printer = django_filters.ModelChoiceFilter(queryset=DB_DCT['printers'].objects.all(),
+                                          label='IP',
+                                          widget=forms.Select(
+                                              attrs={'class': 'selectpicker', 'data-live-search': 'true',
+                                                     'data-size': '4', 'data-dropup-auto': 'false',
+                                                     'data-style': 'btn btn-outline-primary'}),
+                                          empty_label='Выберете модель принтера')
+
+    class Meta:
+        model = GiveCartridge
+
+        fields = ['date','printer']
+
 class DrumFilter(django_filters.FilterSet):
     date = django_filters.DateFromToRangeFilter(widget=django_filters.widgets.RangeWidget(
             attrs={'type':'date','class':'btn btn-outline-primary'}

@@ -16,11 +16,9 @@ urlpatterns = [
     path('drum_stats/update/<int:pk>', views.update_drum, name = 'drum_update'),
     path('view_full_report', views.view_full_report, name='view_full_report'),
     path('cartridge_utility', views.cartridge_utility, name='cartridge_utility'),
-<<<<<<< HEAD
-    path('request_printers',views.request_printers_stats,name='request_printers')
-=======
+    path('request_printers',views.request_printers_stats,name='request_printers'),
     path('obmen',views.obmen, name='obmen'),
     path('obmen/update/<int:pk>', views.obmen_update,name='obmen_update'),
     path('obmen/get', views.folders_api,name='get'),
->>>>>>> blyat
+
 ]

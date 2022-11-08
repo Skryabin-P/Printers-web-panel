@@ -10,11 +10,11 @@ from admin_dashboard.models import PlacesList, PrintersMain
 from django.views.generic.list import ListView
 from func import get_full_info
 from django.forms.models import model_to_dict
-<<<<<<< HEAD
+
 from .forms import GiveCartridgeForm,TonerUtilsFilter,CartridgeFilter,RequestFilter,GiveDrumForm,DrumFilter,RequestFilterTest
-=======
+
 from .forms import GiveCartridgeForm,TonerUtilsFilter,CartridgeFilter,RequestFilter,GiveDrumForm,DrumFilter,ObmenForms
->>>>>>> blyat
+
 from django.urls import reverse
 from django.core.paginator import Paginator
 import xlwt

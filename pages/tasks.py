@@ -4,9 +4,10 @@ from __future__ import absolute_import,unicode_literals
 # django.setup()
 from interface.celery import shared_task
 from admin_dashboard.models import PrintersMain
-from pages.models import RequestPrinters
+from pages.models import RequestPrinters,ObmenFolders
 from func import get_full_info
 from interface.celery import app
+import os
 @shared_task
 def add(x,y):
     return x+y
@@ -39,6 +40,24 @@ def request_printers():
                                                     device_name=temp_info['Device name'],
                                                     changed=changed)
                 db.save()
+
+@app.task
+def scan_obmen():
+    all_dirs = os.listdir(fr'\\10.7.202.50\obmen')
+    dirs = []
+    for dir in all_dirs:
+        if os.path.isdir(fr'\\10.7.202.50\obmen\{dir}'):
+            dirs.append(dir)
+    for dir in dirs:
+        if len(ObmenFolders.objects.filter(name=dir)) == 0:
+            db = ObmenFolders.objects.create(name=dir,description='Описание не добавлено')
+            db.save()
+    for folder in ObmenFolders.objects.all():
+        if folder.name not in dirs:
+            folder.delete()
+
+
+
 
 
 

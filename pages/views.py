@@ -4,16 +4,17 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse, FileResponse
 from django.db.models import Q, Min, Max, Sum,F, Case, When,Value,FloatField,CharField,Subquery, OuterRef
 from django.db.models.functions import Coalesce
-from .models import GiveCartridge,RequestPrinters, GiveDrum
+from .models import GiveCartridge,RequestPrinters, GiveDrum,ObmenFolders
 from django.views.generic.edit import DeleteView,CreateView, UpdateView
 from admin_dashboard.models import PlacesList, PrintersMain
 from django.views.generic.list import ListView
 from func import get_full_info
 from django.forms.models import model_to_dict
-from .forms import GiveCartridgeForm,TonerUtilsFilter,CartridgeFilter,RequestFilter,GiveDrumForm,DrumFilter
+from .forms import GiveCartridgeForm,TonerUtilsFilter,CartridgeFilter,RequestFilter,GiveDrumForm,DrumFilter,ObmenForms
 from django.urls import reverse
 from django.core.paginator import Paginator
 import xlwt
+from django.core import serializers
 from django.shortcuts import get_object_or_404
 
 from django.db import connection, reset_queries
@@ -597,3 +598,61 @@ def export_toner_withdraw(request,obj,date_min = False,date_max=False):
     wb.save(return_obj)
 
     return return_obj
+
+def obmen(request):
+    if not request.user.is_authenticated:
+        return redirect(f"/admin_dashboard/login")
+    fields = [f.verbose_name for f in ObmenFolders._meta.fields]
+
+    folders = ObmenFolders.objects.all().order_by('-pk')
+    context = {}
+    context['filter'] = folders
+
+    context['fields'] = fields
+    paginated_set = Paginator(folders, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginated_set.get_page(page_number)
+    context['page_obj'] = page_obj
+
+    return render(request, 'obmen.html', context=context)
+
+def obmen_update(response, pk):
+    # update record from GiveDrum
+    if not response.user.is_authenticated:
+        return redirect(f"/admin_dashboard/login")
+    fields = [f.verbose_name for f in ObmenFolders._meta.fields]
+    class UpdateParams(UpdateView):
+        template_name = 'update.html'
+        model = ObmenFolders
+        context_object_name = 'params'
+        form_class = ObmenForms
+
+        success_url = f"/obmen"
+
+        extra_context = {'fields':fields}
+
+        def get_object(self, queryset=None):
+            if queryset is None:
+                queryset = self.get_queryset()
+            queryset = queryset.filter(pk=pk)
+            self.obj = queryset.get()
+
+            return self.obj
+        def get_success_url(self):
+            return reverse('obmen')
+
+    return UpdateParams.as_view()(response)
+
+def folders_api(request):
+    data = []
+    for folder in ObmenFolders.objects.all():
+        temp_data = {}
+        temp_data.update(model_to_dict(folder))
+        data.append(temp_data)
+
+    import json
+    response = json.dumps(data, ensure_ascii=False).encode('utf8')
+    print(response)
+    return HttpResponse(response)
+
+

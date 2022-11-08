@@ -47,4 +47,11 @@ class RequestPrinters(models.Model):
         return self.id, self.date, self.printer,  self.page_utility, \
                self.toner_left, self.device_name, self.changed
 
+class ObmenFolders(models.Model):
+    name = models.CharField(max_length=200, verbose_name='Имя папки')
+    description = models.TextField(verbose_name='Описание')
+    visible = models.BooleanField(verbose_name='Показывать папку',default=True)
+    def get_string_fields(self):
+        return self.id,self.name,self.description,self.visible
+
 

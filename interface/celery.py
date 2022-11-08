@@ -15,6 +15,10 @@ app.conf.beat_schedule = {
     'request_printers_by_schedule': {
         'task': 'pages.tasks.request_printers',
         'schedule': crontab(minute='30', hour='8,9,10,11,13,14,15,16,17,19,20,22'),
+    },
+    'obmen_task':{
+        'task': 'pages.tasks.scan_obmen',
+        'schedule': crontab(minute='*/1'),
     }
 
 }

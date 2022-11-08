@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
-from .models import GiveCartridge, RequestPrinters, GiveDrum
+from .models import GiveCartridge, RequestPrinters, GiveDrum,ObmenFolders
 from django.contrib.auth.models import User
 from admin_dashboard.models import DB_DCT
 import django_filters
@@ -243,3 +243,13 @@ class TonerUtilsFilter(django_filters.FilterSet):
     class Meta:
         model = RequestPrinters
         fields = ('date','printer__place','printer__toner','printer__printermodel','printer')
+
+
+class ObmenForms(forms.ModelForm):
+    name = forms.CharField(max_length=200)
+    description = forms.Textarea()
+    visible = forms.CheckboxInput()
+    class Meta:
+
+        model = ObmenFolders
+        fields = '__all__'

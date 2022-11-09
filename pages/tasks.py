@@ -24,7 +24,7 @@ def request_printers():
 
             if previous_note != None:
                 # if amount of toner now is bigger than previous amount then toner was changed
-                if int(previous_note) >= 0:
+                if int(previous_note.toner_left) >= 0:
                     if (int(temp_info['black_toner_left']) > (15 + int(previous_note.toner_left))) and (
                             int(temp_info['black_toner_left']) > 1):
                         changed = 1

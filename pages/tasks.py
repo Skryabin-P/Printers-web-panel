@@ -33,7 +33,7 @@ def request_printers():
                 if previous_note.toner_left != None:
                     # if amount of toner now is bigger than previous amount then toner was changed
                     if int(previous_note.toner_left) >=0:
-                        if (int(temp_info['black_toner_left']) > (15 + int(previous_note.toner_left))) and (int(temp_info['black_toner_left'] ) > 1):
+                        if (int(temp_info['black_toner_left']) > (15 + int(previous_note.toner_left))) and (int(temp_info['black_toner_left'] ) > -1):
                             changed = 1
 
 
@@ -52,10 +52,10 @@ def request_printers():
 
 @app.task
 def scan_obmen():
-    all_dirs = os.listdir(fr'\\10.7.202.50\obmen')
+    all_dirs = os.listdir(fr'\\10.7.202.50\obmen\Проект структуры папок подразделений Общества')
     dirs = []
     for dir in all_dirs:
-        if os.path.isdir(fr'\\10.7.202.50\obmen\{dir}'):
+        if os.path.isdir(fr'\\10.7.202.50\obmen\Проект структуры папок подразделений Общества\{dir}'):
             dirs.append(dir)
     for dir in dirs:
         if len(ObmenFolders.objects.filter(name=dir)) == 0:

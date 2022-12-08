@@ -161,15 +161,28 @@ def view_full_report(response):
     filter = RequestFilter(response.GET, queryset=RequestPrinters.objects.order_by())
     context = {}
     # annotate filtered queryset for each printer
-    q = filter.qs.values("printer").annotate(ip = F('printer__ip'),
-                                                        printer_model = F('printer__printermodel__name'), toner_model = F('printer__toner__name'),
-                                                        place = F('printer__place__name'),
-                                                        num_pages = (Max('page_utility') - Min('page_utility')),
-                                                        cartridges = Sum('changed'),mean = Coalesce(Subquery(filter.qs.values('printer').filter(changed = 1, printer_id = OuterRef('printer_id')).annotate(cartridges=Sum('changed'), mean_per_cartridge=Case(
-        When(cartridges__gt=1,changed=1, then=((Max('page_utility') - Min('page_utility')) / (F('cartridges')-1))),
-        output_field=CharField())).values("mean_per_cartridge")), Value('Замены не было')), device_name = F('device_name'),
-                                                        comment= F('printer__comment'))
-
+    # q = filter.qs.values("printer").annotate(ip = F('printer__ip'),
+    #                                                     printer_model = F('printer__printermodel__name'), toner_model = F('printer__toner__name'),
+    #                                                     place = F('printer__place__name'),
+    #                                                     num_pages = (Max('page_utility') - Min('page_utility')),
+    #                                                     cartridges = Sum('changed'),mean = Coalesce(Subquery(filter.qs.values('printer').filter(changed = 1, printer_id = OuterRef('printer_id')).annotate(cartridges=Sum('changed'), mean_per_cartridge=Case(
+    #     When(cartridges__gt=1,changed=1, then=((Max('page_utility') - Min('page_utility')) / (F('cartridges')-1))),
+    #     output_field=CharField())).values("mean_per_cartridge")), Value('Замены не было')), device_name = F('device_name'),
+    #                                                     comment= F('printer__comment'))
+    q = []
+    for printer in filter.qs.values("printer"):
+        row = {}
+        qs = filter.qs.filter(printer=printer['printer'])
+        # row['ip'] = qs[0].printer.ip
+        # row['printer_model'] = qs[0].printer.printermodel.name
+        # row['toner_model'] = qs[0].printer.toner.name
+        # row['place'] = qs[0].printer.place.name
+        # # row['num_pages'] = Max(qs.values('page_utility'))
+        row = qs.aggregate(F('printer__ip'),
+        printer_model = F('printer__printermodel__name'), toner_model = F('printer__toner__name'),
+        place = F('printer__place__name'),
+        )
+        print(row)
     if len(q) > 0:
         fields = [f for f in q[0].keys()]
         ru_fields = ['ID','IP','Модель принтера','Модель картриджа','Площадка',

@@ -44,7 +44,7 @@
         {% endfor %}<th></th><th></th><th></th>
     </tr>
 
-    {% for row in page_obj|index:i %}
+    {% for row in stats_table|index:i %}
 <tr>
         {% for item in row.values %}
         <td>{{item}}</td>

@@ -6,7 +6,6 @@
 # Node artifact files
 node_modules/
 dist/
-
 # Compiled Java class files
 *.class
 
@@ -49,6 +48,8 @@ Thumbs.db
 *.wmv
 # my custom ignore
 venv/
+pages/migrations/
+admin_dashboard/migrations/
 study.py
 main.py
 db.sqlite3

@@ -44,7 +44,8 @@
         {% endfor %}<th></th><th></th><th></th>
     </tr>
 
-    {% for row in stats_table|index:i %}
+    {% with t=page %}
+    {% for row in page_obj|index:t %}
 <tr>
         {% for item in row.values %}
         <td>{{item}}</td>
@@ -52,6 +53,7 @@
 
         </tr>
         {% endfor %}
+    {% endwith %}
     <tr class="bg-danger"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 
 
@@ -68,6 +70,7 @@
     <tr class="table-info"><td></td><td></td><td>Found by request</td> <td class="table-warning">{{stats_table|length}}<td></td><td></td></tr></div>
 </table>
 {% if page_obj.paginator.num_pages > 1 %}
+        {{page_obj.paginator.num_pages}}
         <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
             <li class="page-item"><a class = "page-link" href="{% my_url 1 'page' request.GET.urlencode %}"> First</a></li>

@@ -18,6 +18,9 @@ def my_url(value,field_name,urlencode=None):
 def index(indexable, i):
     return indexable[i]
 
+def page_item_num(page,i):
+    return i-(page-1)*20
+
 @register.filter
 def values(dict):
     return dict.values()

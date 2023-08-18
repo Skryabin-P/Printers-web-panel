@@ -2,7 +2,7 @@
 
 ## Web panel for monitoring network printers
 
-Web on Django with celery and snmp library .
+It works on Django, also it uses celery and pysnmp library for collecting printers utility stats
 
 #### It was created for my organisation where I am system administrator.
 
@@ -10,7 +10,7 @@ It is my first try with Django, celery and bootstrap.
 Don't judge site design I'm not a frontender at all :D
 
 With celery does requesting printers by snmp every hour from 8am to 22pm and 
-insert this data about page count, toner left in DataBase
+records this data about page printing count, toner left in DataBase
 
 ### There's few main parts :
 1. Admin dashboard. Where we can add printer models, toner models etc. And we use this to add printers 
